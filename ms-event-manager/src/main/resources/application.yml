@@ -17,3 +17,9 @@ eureka:
   instance:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /api/v1/events/api-docs
+  packagesToScan: com.johann.mseventmanager.web.controller
