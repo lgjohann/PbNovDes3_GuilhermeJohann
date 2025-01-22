@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class EventService {
@@ -34,9 +36,28 @@ public class EventService {
         return eventRepository.save(event);
     }
 
+    @Transactional(readOnly = true)
     public Event findById(String id) {
         return eventRepository.findById(id).orElseThrow(
                 () -> new EventNotFoundException("event not found in the database")
         );
+    }
+
+    @Transactional(readOnly = true)
+    public List<Event> findAll() {
+        List<Event> list = eventRepository.findAll();
+        if (list.isEmpty()) {
+            throw new EventNotFoundException("No events were found in the database");
+        }
+        return list;
+    }
+
+    @Transactional(readOnly = true)
+    public List<Event> findAllSorted() {
+        List<Event> list = eventRepository.findAllByOrderByEventNameAsc();
+        if (list.isEmpty()) {
+            throw new EventNotFoundException("No events were found in the database");
+        }
+        return list;
     }
 }
