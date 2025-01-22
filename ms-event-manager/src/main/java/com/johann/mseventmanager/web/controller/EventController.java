@@ -15,10 +15,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,8 +26,8 @@ public class EventController {
     private final EventService eventService;
 
     @Operation(
-            summary = "Criar um novo produto.",
-            description = "Recurso para criar um novo produto.",
+            summary = "Criar um novo evento.",
+            description = "Recurso para criar um novo evento.",
             responses = {
                     @ApiResponse(responseCode = "201", description = "Recurso criado com sucesso",
                             content = @Content(mediaType = "application/json",
@@ -43,11 +40,28 @@ public class EventController {
                                     schema = @Schema(implementation = ErrorMessage.class)))
             }
     )
-
     @PostMapping
     public ResponseEntity<EventResponseDto> create(@RequestBody @Valid EventCreateDto eventCreateDto){
         Event event = eventService.save(EventMapper.toEvent(eventCreateDto));
         return ResponseEntity.status(HttpStatus.CREATED).body(EventMapper.toDto(event));
+    }
+
+    @Operation(
+            summary = "Recuperar um evento por id.",
+            description = "Recurso para recuperaer um evento através do id.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Recurso localizado com sucesso",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = EventResponseDto.class))),
+                    @ApiResponse(responseCode = "404", description = "O evento com id informado não foi localizado",
+                            content = @Content(mediaType = " application/json;charset=UTF-8",
+                                    schema = @Schema(implementation = ErrorMessage.class))),
+            }
+    )
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<EventResponseDto> getById(@PathVariable String id){
+        Event event = eventService.findById(id);
+        return ResponseEntity.ok(EventMapper.toDto(event));
     }
 }
 

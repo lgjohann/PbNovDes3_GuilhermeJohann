@@ -1,6 +1,7 @@
 package com.johann.mseventmanager.web.exception;
 
 import com.johann.mseventmanager.exception.CepNotFoundException;
+import com.johann.mseventmanager.exception.EventNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -36,8 +37,8 @@ public class ApiExceptionHandler {
                 .body(new ErrorMessage(request, HttpStatus.BAD_REQUEST, ex.getMessage()));
     }
 
-    @ExceptionHandler(CepNotFoundException.class)
-    public ResponseEntity<ErrorMessage> cepNotFoundException(CepNotFoundException ex, HttpServletRequest request) {
+    @ExceptionHandler({CepNotFoundException.class, EventNotFoundException.class})
+    public ResponseEntity<ErrorMessage> cepNotFoundException(RuntimeException ex, HttpServletRequest request) {
 
         log.error("Api Error - ", ex);
         return ResponseEntity

@@ -3,6 +3,7 @@ package com.johann.mseventmanager.service;
 import com.johann.mseventmanager.client.ViaCepClient;
 import com.johann.mseventmanager.entity.Event;
 import com.johann.mseventmanager.exception.CepNotFoundException;
+import com.johann.mseventmanager.exception.EventNotFoundException;
 import com.johann.mseventmanager.repository.EventRepository;
 import com.johann.mseventmanager.web.dto.AddressResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -31,5 +32,11 @@ public class EventService {
 
         event.setUf(address.getUf());
         return eventRepository.save(event);
+    }
+
+    public Event findById(String id) {
+        return eventRepository.findById(id).orElseThrow(
+                () -> new EventNotFoundException("event not found in the database")
+        );
     }
 }
