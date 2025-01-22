@@ -104,5 +104,29 @@ public class EventController {
         List<EventResponseDto> dtoList = list.stream().map(event -> EventMapper.toDto(event)).toList();
         return ResponseEntity.ok(dtoList);
     }
+
+
+    @Operation(
+            summary = "Atualizar um evento.",
+            description = "Recurso para atualizar informações de um evento.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Recurso atualizado com sucesso",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = EventResponseDto.class))),
+                    @ApiResponse(responseCode = "404", description = "Possiveis causas desse erro: <br>"+
+                            "- O cep informado para localização do evento não foi encontrado na base de dados"+
+                            "- O ID do evento informado não foi encontrado na base de dados",
+                            content = @Content(mediaType = " application/json;charset=UTF-8",
+                                    schema = @Schema(implementation = ErrorMessage.class))),
+                    @ApiResponse(responseCode = "422", description = "Não foi possível atualizar o recurso, pois os dados de entrada são inválidos",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class)))
+            }
+    )
+    @PutMapping(value = "/update-event/{id}")
+    public ResponseEntity<EventResponseDto> update(@RequestBody @Valid EventCreateDto updatedEvent, @PathVariable String id){
+        Event event = eventService.update(updatedEvent, id);
+        return ResponseEntity.ok(EventMapper.toDto(event));
+    }
 }
 

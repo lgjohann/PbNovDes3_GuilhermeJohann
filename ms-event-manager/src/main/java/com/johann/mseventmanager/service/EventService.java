@@ -6,6 +6,7 @@ import com.johann.mseventmanager.exception.CepNotFoundException;
 import com.johann.mseventmanager.exception.EventNotFoundException;
 import com.johann.mseventmanager.repository.EventRepository;
 import com.johann.mseventmanager.web.dto.AddressResponseDto;
+import com.johann.mseventmanager.web.dto.EventCreateDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,8 +32,8 @@ public class EventService {
         event.setLogradouro(address.getLogradouro());
         event.setBairro(address.getBairro());
         event.setCidade(address.getLocalidade());
-
         event.setUf(address.getUf());
+
         return eventRepository.save(event);
     }
 
@@ -59,5 +60,16 @@ public class EventService {
             throw new EventNotFoundException("No events were found in the database");
         }
         return list;
+    }
+
+    @Transactional
+    public Event update(EventCreateDto updatedEvent, String id) {
+        Event event = findById(id);
+
+        event.setEventName(updatedEvent.getEventName());
+        event.setDateTime(updatedEvent.getDateTime());
+        event.setCep(updatedEvent.getCep());
+
+        return save(event);
     }
 }
