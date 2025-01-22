@@ -128,5 +128,21 @@ public class EventController {
         Event event = eventService.update(updatedEvent, id);
         return ResponseEntity.ok(EventMapper.toDto(event));
     }
+
+    @Operation(
+            summary = "Deletar um evento por id.",
+            description = "Recurso para deletar um evento através do id.",
+            responses = {
+                    @ApiResponse(responseCode = "204", description = "Recurso deletado com sucesso"),
+                    @ApiResponse(responseCode = "404", description = "O evento com id informado não foi localizado",
+                            content = @Content(mediaType = " application/json;charset=UTF-8",
+                                    schema = @Schema(implementation = ErrorMessage.class))),
+            }
+    )
+    @DeleteMapping(value = "/delete-event/{id}")
+    public ResponseEntity<Void> delete(@PathVariable String id){
+        eventService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 }
 

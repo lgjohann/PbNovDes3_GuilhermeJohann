@@ -72,4 +72,12 @@ public class EventService {
 
         return save(event);
     }
+
+    @Transactional
+    public void delete(String id) {
+        if (!eventRepository.existsById(id)) {
+            throw new EventNotFoundException("event not found in the database");
+        }
+        eventRepository.deleteById(id);
+    }
 }
