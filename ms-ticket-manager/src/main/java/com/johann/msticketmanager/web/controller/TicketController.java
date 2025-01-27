@@ -92,7 +92,7 @@ public class TicketController {
 
     @Operation(
             summary = "Recuperar ingressos por cpf.",
-            description = "Recurso para recuperar uma lista de ingresso através do cpf do cliente.",
+            description = "Recurso para recuperar uma lista de ingressos através do cpf do cliente.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Recurso localizado com sucesso",
                             content = @Content(mediaType = "application/json",
@@ -106,5 +106,43 @@ public class TicketController {
     public ResponseEntity<List<TicketResponseDto>> getTicketByCpf(@PathVariable String cpf){
         List<TicketResponseDto> dto = ticketService.findTicketByCpf(cpf);
         return ResponseEntity.ok(dto);
+    }
+
+    @Operation(
+            summary = "Cancelar um ingresso por id.",
+            description = "Recurso para cancelar um ingresso através do id.",
+            responses = {
+                    @ApiResponse(responseCode = "204", description = "Recurso deletado com sucesso"),
+                    @ApiResponse(responseCode = "404", description = "O ingresso com id informado não foi localizado",
+                            content = @Content(mediaType = "application/json;charset=UTF-8",
+                                    schema = @Schema(implementation = ErrorMessage.class))),
+                    @ApiResponse(responseCode = "409", description = "O ingresso com esse id já está cancelado",
+                            content = @Content(mediaType = "application/json;charset=UTF-8",
+                                    schema = @Schema(implementation = ErrorMessage.class))),
+            }
+    )
+    @DeleteMapping(value = "cancel-ticket/{id}")
+    public ResponseEntity<Void> deleteTicket(@PathVariable BigInteger id) {
+        ticketService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Operation(
+            summary = "Cancelar ingressos por cpf.",
+            description = "Recurso para cancelar todos os ingresso através do id.",
+            responses = {
+                    @ApiResponse(responseCode = "204", description = "Recurso deletado com sucesso"),
+                    @ApiResponse(responseCode = "404", description = "Não foram encontrados ingressos vinculados ao CPF informado",
+                            content = @Content(mediaType = "application/json;charset=UTF-8",
+                                    schema = @Schema(implementation = ErrorMessage.class))),
+                    @ApiResponse(responseCode = "409", description = "Todos os ingressos vinculados a esse cpf já estão cancelados",
+                            content = @Content(mediaType = "application/json;charset=UTF-8",
+                                    schema = @Schema(implementation = ErrorMessage.class))),
+            }
+    )
+    @DeleteMapping(value = "cancel-ticket-by-cpf/{cpf}")
+    public ResponseEntity<Void> cancelTicket(@PathVariable String cpf) {
+        ticketService.deleteByCpf(cpf);
+        return ResponseEntity.noContent().build();
     }
 }

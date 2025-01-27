@@ -1,6 +1,7 @@
 package com.johann.msticketmanager.web.exception;
 
 import com.johann.msticketmanager.exception.EventNotFound;
+import com.johann.msticketmanager.exception.TicketDeleteException;
 import com.johann.msticketmanager.exception.TicketNotFound;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -45,5 +46,15 @@ public class ApiExceptionHandler {
                 .status(HttpStatus.NOT_FOUND)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(new ErrorMessage(request, HttpStatus.NOT_FOUND, ex.getMessage()));
+    }
+
+    @ExceptionHandler(TicketDeleteException.class)
+    public ResponseEntity<ErrorMessage> ticketDeleteException(TicketDeleteException ex, HttpServletRequest request) {
+
+        log.error("Api Error - ", ex);
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new ErrorMessage(request, HttpStatus.CONFLICT, ex.getMessage()));
     }
 }

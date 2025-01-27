@@ -3,6 +3,7 @@ package com.johann.msticketmanager.service;
 import com.johann.msticketmanager.clients.MsEventClient;
 import com.johann.msticketmanager.entity.Ticket;
 import com.johann.msticketmanager.exception.EventNotFound;
+import com.johann.msticketmanager.exception.TicketDeleteException;
 import com.johann.msticketmanager.exception.TicketNotFound;
 import com.johann.msticketmanager.repository.TicketRepository;
 import com.johann.msticketmanager.web.dto.EventDto;
@@ -94,5 +95,45 @@ public class TicketService {
         }
 
         return dtoList;
+    }
+
+    @Transactional
+    public void deleteById(BigInteger id) {
+        if(!ticketRepository.existsById(id)) {
+            throw new TicketNotFound(String.format("Ticket with id %d not found", id));
+        }
+        if(!ticketRepository.findById(id).get().getStatus().equals("sucesso")) {
+            throw new TicketDeleteException(String.format("Ticket with id %d is already deleted", id));
+        }
+        Ticket ticket = ticketRepository.findById(id).get();
+        ticket.setStatus("cancelado");
+        ticketRepository.save(ticket);
+    }
+
+    @Transactional
+    public void deleteByCpf(String cpf) {
+        List<Ticket> tickets = ticketRepository.findAllByCpf(cpf);
+        if (tickets.isEmpty()) {
+            throw new TicketNotFound(String.format("No tickets were found for this cpf: %s", cpf));
+        }
+        checkIfAllCanceled(cpf, tickets);
+
+        for (Ticket ticket : tickets) {
+            ticket.setStatus("cancelado");
+            ticketRepository.save(ticket);
+        }
+    }
+
+    private void checkIfAllCanceled(String cpf, List<Ticket> tickets) {
+        boolean allCanceled = true;
+        for (Ticket ticket : tickets) {
+            if (!ticket.getStatus().equals("cancelado")) {
+                allCanceled = false;
+                break;
+            }
+        }
+        if (allCanceled) {
+            throw new TicketDeleteException(String.format("Tickets for the cpf %s is already all canceled", cpf));
+        }
     }
 }
