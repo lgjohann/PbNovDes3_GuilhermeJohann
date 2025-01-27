@@ -5,6 +5,11 @@ import com.johann.msticketmanager.service.TicketService;
 import com.johann.msticketmanager.web.dto.TicketCreateDto;
 import com.johann.msticketmanager.web.dto.TicketResponseDto;
 import com.johann.msticketmanager.web.dto.mapper.TicketMapper;
+import com.johann.msticketmanager.web.exception.ErrorMessage;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,10 +28,25 @@ public class TicketController {
 
     private final TicketService ticketService;
 
+    @Operation(
+            summary = "Criar um novo ingresso.",
+            description = "Recurso para criar um novo ingresso.",
+            responses = {
+                    @ApiResponse(responseCode = "201", description = "Recurso criado com sucesso",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = TicketResponseDto.class))),
+                    @ApiResponse(responseCode = "404", description = "O id do evento informado para criação do ingresso não foi encontrado na base de dados",
+                            content = @Content(mediaType = " application/json;charset=UTF-8",
+                                    schema = @Schema(implementation = ErrorMessage.class))),
+                    @ApiResponse(responseCode = "422", description = "Não foi possível criar o recurso, pois os dados de entrada são inválidos",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class)))
+            }
+    )
     @PostMapping(value = "/create-ticket")
     public ResponseEntity<TicketResponseDto> create(@RequestBody @Valid TicketCreateDto ticketCreateDto){
-        Ticket ticket = ticketService.createTicket(TicketMapper.toTicket(ticketCreateDto));
-        return ResponseEntity.status(HttpStatus.CREATED).body(TicketMapper.toDto(ticket));
+        TicketResponseDto ticket = ticketService.createTicket(TicketMapper.toTicket(ticketCreateDto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(ticket);
     }
 
 }

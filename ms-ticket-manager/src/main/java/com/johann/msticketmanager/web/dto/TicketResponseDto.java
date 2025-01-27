@@ -14,7 +14,7 @@ public class TicketResponseDto {
     private String cpf;
     private String customerName;
     private String customerMail;
-    private EventResponseDto event;
+    private EventDto event;
     private BigDecimal brlTotalAmount;
     private BigDecimal usdTotalAmount;
     private String status;

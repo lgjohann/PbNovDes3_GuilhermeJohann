@@ -1,5 +1,6 @@
 package com.johann.msticketmanager.web.exception;
 
+import com.johann.msticketmanager.exception.EventNotFound;
 import com.johann.msticketmanager.exception.TicketNotFound;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +37,7 @@ public class ApiExceptionHandler {
                 .body(new ErrorMessage(request, HttpStatus.BAD_REQUEST, ex.getMessage()));
     }
 
-    @ExceptionHandler(TicketNotFound.class)
+    @ExceptionHandler({TicketNotFound.class, EventNotFound.class})
     public ResponseEntity<ErrorMessage> EntityNotFoundException(RuntimeException ex, HttpServletRequest request) {
 
         log.error("Api Error - ", ex);
