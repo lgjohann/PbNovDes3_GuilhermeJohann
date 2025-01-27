@@ -15,10 +15,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.math.BigInteger;
 
 @RestController
 @RequiredArgsConstructor
@@ -49,4 +48,21 @@ public class TicketController {
         return ResponseEntity.status(HttpStatus.CREATED).body(ticket);
     }
 
+    @Operation(
+            summary = "Recuperar um ingresso por id.",
+            description = "Recurso para recuperar um ingresso através do id.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Recurso localizado com sucesso",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = TicketResponseDto.class))),
+                    @ApiResponse(responseCode = "404", description = "O ingresso com id informado não foi localizado",
+                            content = @Content(mediaType = " application/json;charset=UTF-8",
+                                    schema = @Schema(implementation = ErrorMessage.class))),
+            }
+    )
+    @GetMapping(value = "/get-ticket/{id}")
+    public ResponseEntity<TicketResponseDto> getTicket(@PathVariable BigInteger id){
+        TicketResponseDto dto = ticketService.findTicketById(id);
+        return ResponseEntity.ok(dto);
+    }
 }

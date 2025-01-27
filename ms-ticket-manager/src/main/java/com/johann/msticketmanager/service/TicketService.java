@@ -3,6 +3,7 @@ package com.johann.msticketmanager.service;
 import com.johann.msticketmanager.clients.MsEventClient;
 import com.johann.msticketmanager.entity.Ticket;
 import com.johann.msticketmanager.exception.EventNotFound;
+import com.johann.msticketmanager.exception.TicketNotFound;
 import com.johann.msticketmanager.repository.TicketRepository;
 import com.johann.msticketmanager.web.dto.EventDto;
 import com.johann.msticketmanager.web.dto.TicketResponseDto;
@@ -11,6 +12,8 @@ import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigInteger;
 
 @Service
 @RequiredArgsConstructor
@@ -37,5 +40,14 @@ public class TicketService {
         } catch (FeignException.FeignClientException.NotFound e) {
             throw new EventNotFound("Event not found");
         }
+    }
+
+    @Transactional(readOnly = true)
+    public TicketResponseDto findTicketById(BigInteger id) {
+        Ticket ticket = ticketRepository.findById(id).orElseThrow(() -> new TicketNotFound(String.format("Ticket with id %d not found", id)));
+        EventDto eventDto = EventDto.toEvent(msEventClient.findEventById(ticket.getEventId()));
+        TicketResponseDto responseDto = TicketMapper.toDto(ticket);
+        responseDto.setEvent(eventDto);
+        return responseDto;
     }
 }
