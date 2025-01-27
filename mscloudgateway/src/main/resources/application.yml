@@ -23,3 +23,5 @@ springdoc:
     urls:
       - url: /api/v1/events/api-docs
         name: Event Manager
+      - url: /api/v1/tickets/api-docs
+        name: Ticket Manager

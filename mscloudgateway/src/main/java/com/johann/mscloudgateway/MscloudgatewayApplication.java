@@ -20,7 +20,7 @@ public class MscloudgatewayApplication {
         return builder
                 .routes()
                 .route( r -> r.path("/api/v1/events/**").uri("lb://ms-event-manager") )
-                .route( r -> r.path("/api/v1/tickets/**").uri("lb://ms-tickets-manager") )
+                .route( r -> r.path("/api/v1/tickets/**").uri("lb://ms-ticket-manager") )
                 .build();
     }
 }
