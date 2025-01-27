@@ -6,6 +6,7 @@ import com.johann.msticketmanager.web.dto.TicketResponseDto;
 import com.johann.msticketmanager.web.dto.mapper.TicketMapper;
 import com.johann.msticketmanager.web.exception.ErrorMessage;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -17,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -85,6 +87,24 @@ public class TicketController {
     @PutMapping(value = "/update-ticket/{id}")
     public ResponseEntity<TicketResponseDto> updateTicket(@PathVariable BigInteger id, @RequestBody @Valid TicketCreateDto ticketUpdate) {
         TicketResponseDto dto = ticketService.updateTicket(id ,ticketUpdate);
+        return ResponseEntity.ok(dto);
+    }
+
+    @Operation(
+            summary = "Recuperar ingressos por cpf.",
+            description = "Recurso para recuperar uma lista de ingresso através do cpf do cliente.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Recurso localizado com sucesso",
+                            content = @Content(mediaType = "application/json",
+                                    array = @ArraySchema( schema = @Schema(implementation = TicketResponseDto.class)))),
+                    @ApiResponse(responseCode = "404", description = "Não foram encontrados ingressos vinculados ao CPF informado",
+                            content = @Content(mediaType = " application/json;charset=UTF-8",
+                                    schema = @Schema(implementation = ErrorMessage.class))),
+            }
+    )
+    @GetMapping(value = "/get-ticket-by-cpf/{cpf}")
+    public ResponseEntity<List<TicketResponseDto>> getTicketByCpf(@PathVariable String cpf){
+        List<TicketResponseDto> dto = ticketService.findTicketByCpf(cpf);
         return ResponseEntity.ok(dto);
     }
 }

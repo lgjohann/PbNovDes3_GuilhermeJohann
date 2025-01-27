@@ -1,6 +1,7 @@
 package com.johann.msticketmanager.web.dto.mapper;
 
 import com.johann.msticketmanager.entity.Ticket;
+import com.johann.msticketmanager.web.dto.EventDto;
 import com.johann.msticketmanager.web.dto.TicketCreateDto;
 import com.johann.msticketmanager.web.dto.TicketResponseDto;
 import lombok.AccessLevel;
@@ -29,6 +30,19 @@ public class TicketMapper {
             protected void configure() {
                 map().setBrlTotalAmount(source.getBrlAmount());
                 map().setUsdTotalAmount(source.getUsdAmount());
+            }
+        });
+        return modelMapper.map(ticket, TicketResponseDto.class);
+    }
+
+    public static TicketResponseDto toDto(Ticket ticket, EventDto event) {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.addMappings(new PropertyMap<Ticket, TicketResponseDto>() {
+            @Override
+            protected void configure() {
+                map().setBrlTotalAmount(source.getBrlAmount());
+                map().setUsdTotalAmount(source.getUsdAmount());
+                map().setEvent(event);
             }
         });
         return modelMapper.map(ticket, TicketResponseDto.class);

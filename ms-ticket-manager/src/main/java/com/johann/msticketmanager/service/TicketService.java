@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -76,4 +78,21 @@ public class TicketService {
             throw new EventNotFound("Event not found");
         }
    }
+
+   @Transactional(readOnly = true)
+    public List<TicketResponseDto> findTicketByCpf(String cpf) {
+        List<Ticket> tickets = ticketRepository.findAllByCpf(cpf);
+        if (tickets.isEmpty()) {
+            throw new TicketNotFound(String.format("No tickets were found for this cpf: %s", cpf));
+       }
+
+
+        List<TicketResponseDto> dtoList = new ArrayList<>();
+        for (Ticket ticket : tickets) {
+            EventDto eventDto = EventDto.toEvent(msEventClient.findEventById(tickets.get(0).getEventId()));
+            dtoList.add(TicketMapper.toDto(ticket, eventDto));
+        }
+
+        return dtoList;
+    }
 }
