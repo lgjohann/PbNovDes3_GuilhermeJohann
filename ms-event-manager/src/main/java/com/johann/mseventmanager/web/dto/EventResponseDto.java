@@ -12,7 +12,7 @@ public class EventResponseDto {
 
     private String id;
     private String eventName;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private LocalDateTime dateTime;
     private String cep;
     private String logradouro;
