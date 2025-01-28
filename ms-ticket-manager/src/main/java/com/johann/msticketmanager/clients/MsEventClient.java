@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 @FeignClient(path = "/api/v1/events", name = "ms-event-manager")
 public interface MsEventClient {
 
-    @GetMapping(value = "get-event/{id}", params = "id")
-    EventClientResponseDto findEventById(@PathVariable("id") String id);
+    @GetMapping(value = "/get-event/{id}")
+    EventClientResponseDto findEventById(@PathVariable String id);
 
 }

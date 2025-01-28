@@ -121,7 +121,7 @@ public class TicketController {
                                     schema = @Schema(implementation = ErrorMessage.class))),
             }
     )
-    @DeleteMapping(value = "cancel-ticket/{id}")
+    @DeleteMapping(value = "/cancel-ticket/{id}")
     public ResponseEntity<Void> deleteTicket(@PathVariable BigInteger id) {
         ticketService.deleteById(id);
         return ResponseEntity.noContent().build();
@@ -129,7 +129,7 @@ public class TicketController {
 
     @Operation(
             summary = "Cancelar ingressos por cpf.",
-            description = "Recurso para cancelar todos os ingresso através do id.",
+            description = "Recurso para cancelar todos os ingressos através do id.",
             responses = {
                     @ApiResponse(responseCode = "204", description = "Recurso deletado com sucesso"),
                     @ApiResponse(responseCode = "404", description = "Não foram encontrados ingressos vinculados ao CPF informado",
@@ -140,9 +140,27 @@ public class TicketController {
                                     schema = @Schema(implementation = ErrorMessage.class))),
             }
     )
-    @DeleteMapping(value = "cancel-ticket-by-cpf/{cpf}")
+    @DeleteMapping(value = "/cancel-ticket-by-cpf/{cpf}")
     public ResponseEntity<Void> cancelTicket(@PathVariable String cpf) {
         ticketService.deleteByCpf(cpf);
         return ResponseEntity.noContent().build();
+    }
+
+    @Operation(
+            summary = "Recuperar ingressos por eventId.",
+            description = "Recurso para recuperar uma lista de ingressos através do id do evento vinculado ao ingresso.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Recurso localizado com sucesso",
+                            content = @Content(mediaType = "application/json",
+                                    array = @ArraySchema( schema = @Schema(implementation = TicketResponseDto.class)))),
+                    @ApiResponse(responseCode = "404", description = "Não foram encontrados ingressos vinculados ao evento informado",
+                            content = @Content(mediaType = " application/json;charset=UTF-8",
+                                    schema = @Schema(implementation = ErrorMessage.class))),
+            }
+    )
+    @GetMapping(value = "/check-tickets-by-event/{eventId}")
+    public ResponseEntity<List<TicketResponseDto>> checkTicketsByEvent(@PathVariable String eventId) {
+        List<TicketResponseDto> dtoList = ticketService.findTicketsByEventId(eventId);
+        return ResponseEntity.ok(dtoList);
     }
 }

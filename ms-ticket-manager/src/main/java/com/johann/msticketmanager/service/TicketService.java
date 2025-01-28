@@ -90,7 +90,7 @@ public class TicketService {
 
         List<TicketResponseDto> dtoList = new ArrayList<>();
         for (Ticket ticket : tickets) {
-            EventDto eventDto = EventDto.toEvent(msEventClient.findEventById(tickets.get(0).getEventId()));
+            EventDto eventDto = EventDto.toEvent(msEventClient.findEventById(ticket.getEventId()));
             dtoList.add(TicketMapper.toDto(ticket, eventDto));
         }
 
@@ -135,5 +135,22 @@ public class TicketService {
         if (allCanceled) {
             throw new TicketDeleteException(String.format("Tickets for the cpf %s is already all canceled", cpf));
         }
+    }
+
+    @Transactional(readOnly = true)
+    public List<TicketResponseDto> findTicketsByEventId(String eventId) {
+        List<Ticket> tickets = ticketRepository.findAllByEventId(eventId);
+        if (tickets.isEmpty()) {
+            throw new TicketNotFound(String.format("No tickets were found for this event: %s", eventId));
+        }
+
+        EventDto eventDto = EventDto.toEvent(msEventClient.findEventById(tickets.get(0).getEventId()));
+
+        List<TicketResponseDto> dtoList = new ArrayList<>();
+        for (Ticket ticket : tickets) {
+            dtoList.add(TicketMapper.toDto(ticket, eventDto));
+        }
+
+        return dtoList;
     }
 }
