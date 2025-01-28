@@ -1,6 +1,6 @@
 package com.johann.mseventmanager.client;
 
-import com.johann.mseventmanager.web.dto.AddressResponseDto;
+import com.johann.mseventmanager.web.dto.clients.AddressResponseDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

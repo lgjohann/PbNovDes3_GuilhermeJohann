@@ -1,6 +1,7 @@
 package com.johann.mseventmanager.web.exception;
 
 import com.johann.mseventmanager.exception.CepNotFoundException;
+import com.johann.mseventmanager.exception.EventDeleteException;
 import com.johann.mseventmanager.exception.EventNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -45,5 +46,15 @@ public class ApiExceptionHandler {
                 .status(HttpStatus.NOT_FOUND)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(new ErrorMessage(request, HttpStatus.NOT_FOUND, ex.getMessage()));
+    }
+
+    @ExceptionHandler(EventDeleteException.class)
+    public ResponseEntity<ErrorMessage> eventDeleteException(RuntimeException ex, HttpServletRequest request) {
+
+        log.error("Api Error - ", ex);
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new ErrorMessage(request, HttpStatus.CONFLICT, ex.getMessage()));
     }
 }

@@ -1,4 +1,4 @@
-package com.johann.mseventmanager.web.dto;
+package com.johann.mseventmanager.web.dto.clients;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

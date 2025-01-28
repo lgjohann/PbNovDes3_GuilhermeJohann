@@ -1,13 +1,22 @@
 package com.johann.mseventmanager.service;
 
+import com.johann.mseventmanager.client.TicketsClient;
 import com.johann.mseventmanager.client.ViaCepClient;
 import com.johann.mseventmanager.entity.Event;
 import com.johann.mseventmanager.exception.CepNotFoundException;
+import com.johann.mseventmanager.exception.EventDeleteException;
 import com.johann.mseventmanager.exception.EventNotFoundException;
 import com.johann.mseventmanager.repository.EventRepository;
-import com.johann.mseventmanager.web.dto.AddressResponseDto;
+import com.johann.mseventmanager.web.dto.clients.AddressResponseDto;
 import com.johann.mseventmanager.web.dto.EventCreateDto;
+import com.johann.mseventmanager.web.dto.clients.TicketResponseDto;
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,8 +26,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EventService {
 
+    private static final Logger log = LoggerFactory.getLogger(EventService.class);
     private final EventRepository eventRepository;
     private final ViaCepClient viaCepClient;
+    private final TicketsClient ticketsClient;
 
     @Transactional
     public Event save(Event event) {
@@ -77,6 +88,20 @@ public class EventService {
     public void delete(String id) {
         if (!eventRepository.existsById(id)) {
             throw new EventNotFoundException("event not found in the database");
+        }
+
+        try {
+            ResponseEntity<?> response = ticketsClient.checkTicketsByEventId(id);
+
+            if (response.getStatusCode() == HttpStatus.OK) {
+                List<TicketResponseDto> tickets = (List<TicketResponseDto>) response.getBody();
+                if (!tickets.isEmpty()) {
+                    throw new EventDeleteException("Tickets are already been sold for this event");
+                }
+            }
+
+        } catch (FeignException.NotFound e) {
+            System.out.println("No tickets found.");
         }
         eventRepository.deleteById(id);
     }
