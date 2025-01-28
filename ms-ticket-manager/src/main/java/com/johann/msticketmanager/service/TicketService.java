@@ -1,10 +1,12 @@
 package com.johann.msticketmanager.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.johann.msticketmanager.clients.MsEventClient;
 import com.johann.msticketmanager.entity.Ticket;
 import com.johann.msticketmanager.exception.EventNotFound;
 import com.johann.msticketmanager.exception.TicketDeleteException;
 import com.johann.msticketmanager.exception.TicketNotFound;
+import com.johann.msticketmanager.mqueue.NotificationTicket;
 import com.johann.msticketmanager.repository.TicketRepository;
 import com.johann.msticketmanager.web.dto.EventDto;
 import com.johann.msticketmanager.web.dto.TicketCreateDto;
@@ -25,6 +27,7 @@ public class TicketService {
 
     private final TicketRepository ticketRepository;
     private final MsEventClient msEventClient;
+    private final NotificationTicket notificationTicket;
 
     @Transactional
     public TicketResponseDto createTicket(Ticket ticket) {
@@ -33,9 +36,10 @@ public class TicketService {
 
             ticket.setEventId(eventDto.getEventId());
             ticket.setEventName(eventDto.getEventName());
-            ticket.setStatus("sucesso"); // fazer isso aqui ser setado após o envio na fila do rabbit.
 
+            ticket.setStatus("sucesso");
             ticketRepository.save(ticket);
+            notificationTicket.publishTicketCreated(ticket);
 
             TicketResponseDto responseDto = TicketMapper.toDto(ticket);
             responseDto.setEvent(eventDto);
@@ -43,6 +47,8 @@ public class TicketService {
             return responseDto;
         } catch (FeignException.FeignClientException.NotFound e) {
             throw new EventNotFound("Event not found");
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
         }
     }
 

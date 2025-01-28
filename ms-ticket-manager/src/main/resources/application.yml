@@ -7,10 +7,10 @@ spring:
       database: ${DB_NAME:db_ticket}
       authentication-database: ${AUTH_DB:admin}
   rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
+    host: ${RABBITMQ-HOST:localhost}
+    port: ${RABBITMQ-PORT:5672}
+    username: ${RABBITMQ-USERNAME:guest}
+    password: ${RABBITMQ-PASSWORD:guest}
 
 server:
   port: 0
