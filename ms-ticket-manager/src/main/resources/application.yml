@@ -6,6 +6,11 @@ spring:
       uri: mongodb://${MONGODB_USERNAME:admin}:${MONGODB_PASSWORD:admin}@${MONGODB_HOST:localhost}:${MONGODB_PORT:27018}
       database: ${DB_NAME:db_ticket}
       authentication-database: ${AUTH_DB:admin}
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
 
 server:
   port: 0
@@ -23,3 +28,7 @@ springdoc:
   api-docs:
     path: /api/v1/tickets/api-docs
   packagesToScan: com.johann.msticketmanager.web.controller
+
+mq:
+  queue:
+    send-email: send-email
