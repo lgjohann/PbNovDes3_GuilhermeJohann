@@ -1,6 +1,8 @@
 package com.johann.msticketmanager.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
@@ -13,6 +15,8 @@ import java.util.Objects;
 @Document(collection = "tickets")
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class Ticket {
 
     @Transient
@@ -29,16 +33,4 @@ public class Ticket {
     private BigDecimal usdAmount;
     private String status;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Ticket ticket = (Ticket) o;
-        return Objects.equals(ticketId, ticket.ticketId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(ticketId);
-    }
 }

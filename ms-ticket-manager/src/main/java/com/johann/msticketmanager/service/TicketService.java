@@ -1,6 +1,5 @@
 package com.johann.msticketmanager.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.johann.msticketmanager.clients.MsEventClient;
 import com.johann.msticketmanager.entity.Ticket;
 import com.johann.msticketmanager.exception.EventNotFound;
@@ -47,8 +46,6 @@ public class TicketService {
             return responseDto;
         } catch (FeignException.FeignClientException.NotFound e) {
             throw new EventNotFound("Event not found");
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
         }
     }
 
