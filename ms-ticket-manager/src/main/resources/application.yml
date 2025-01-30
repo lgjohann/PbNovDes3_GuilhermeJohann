@@ -13,7 +13,7 @@ spring:
     password: ${RABBITMQ_PASSWORD:guest}
 
 server:
-  port: 8081
+  port: ${SERVER_PORT:8081}
 
 springdoc:
   swagger-ui:
