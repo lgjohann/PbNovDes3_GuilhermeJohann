@@ -22,9 +22,7 @@ public class ApiExceptionHandler {
     public ResponseEntity<ErrorMessage> methodArgumentNotValidException(MethodArgumentNotValidException ex, HttpServletRequest request, BindingResult result) {
 
         log.error("Api Error - ", ex);
-        return ResponseEntity
-                .status(HttpStatus.UNPROCESSABLE_ENTITY)
-                .contentType(MediaType.APPLICATION_JSON)
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).contentType(MediaType.APPLICATION_JSON)
                 .body(new ErrorMessage(request, HttpStatus.UNPROCESSABLE_ENTITY, "Invalid(s) field(s)", result));
     }
 
@@ -32,9 +30,7 @@ public class ApiExceptionHandler {
     public ResponseEntity<ErrorMessage> httpMessageNotReadableException(HttpMessageNotReadableException ex, HttpServletRequest request) {
 
         log.error("Api Error - ", ex);
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .contentType(MediaType.APPLICATION_JSON)
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).contentType(MediaType.APPLICATION_JSON)
                 .body(new ErrorMessage(request, HttpStatus.BAD_REQUEST, ex.getMessage()));
     }
 
@@ -42,9 +38,7 @@ public class ApiExceptionHandler {
     public ResponseEntity<ErrorMessage> cepNotFoundException(RuntimeException ex, HttpServletRequest request) {
 
         log.error("Api Error - ", ex);
-        return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
-                .contentType(MediaType.APPLICATION_JSON)
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).contentType(MediaType.APPLICATION_JSON)
                 .body(new ErrorMessage(request, HttpStatus.NOT_FOUND, ex.getMessage()));
     }
 
@@ -52,9 +46,7 @@ public class ApiExceptionHandler {
     public ResponseEntity<ErrorMessage> eventDeleteException(RuntimeException ex, HttpServletRequest request) {
 
         log.error("Api Error - ", ex);
-        return ResponseEntity
-                .status(HttpStatus.CONFLICT)
-                .contentType(MediaType.APPLICATION_JSON)
+        return ResponseEntity.status(HttpStatus.CONFLICT).contentType(MediaType.APPLICATION_JSON)
                 .body(new ErrorMessage(request, HttpStatus.CONFLICT, ex.getMessage()));
     }
 }
