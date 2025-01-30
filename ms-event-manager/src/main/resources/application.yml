@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: ms-event-manager
+  data:
+    mongodb:
+      uri: mongodb://${MONGODB_USERNAME:admin}:${MONGODB_PASSWORD:admin}@${MONGODB_HOST:localhost}:${MONGODB_PORT:27017}
+      database: ${DB_NAME:db_event}
+      authentication-database: ${AUTH_DB:admin}
+
+server:
+  port: 8080
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /api/v1/events/api-docs
+  packagesToScan: com.johann.mseventmanager.web.controller
