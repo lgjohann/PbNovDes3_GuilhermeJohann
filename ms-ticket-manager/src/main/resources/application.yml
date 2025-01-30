@@ -3,14 +3,14 @@ spring:
     name: ms-ticket-manager
   data:
     mongodb:
-      uri: mongodb://${MONGODB_USERNAME:admin}:${MONGODB_PASSWORD:admin}@${MONGODB_HOST:localhost}:${MONGODB_PORT:27018}
+      uri: mongodb://${MONGODB_USERNAME:admin}:${MONGODB_PASSWORD:admin}@${MONGODB_HOST:localhost}:${MONGODB_PORT:27017}/db_ticket?authSource=admin
       database: ${DB_NAME:db_ticket}
       authentication-database: ${AUTH_DB:admin}
   rabbitmq:
-    host: ${RABBITMQ-HOST:localhost}
-    port: ${RABBITMQ-PORT:5672}
-    username: ${RABBITMQ-USERNAME:guest}
-    password: ${RABBITMQ-PASSWORD:guest}
+    host: ${RABBITMQ_HOST:rabbitmq}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:guest}
+    password: ${RABBITMQ_PASSWORD:guest}
 
 server:
   port: 8081
@@ -25,3 +25,6 @@ springdoc:
 mq:
   queue:
     send-email: send-email
+
+feign-names:
+  ms-event-manager: ${FEIGN_MS_EVENT:ms-event-manager}

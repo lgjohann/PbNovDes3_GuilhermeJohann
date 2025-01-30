@@ -12,7 +12,6 @@ import com.johann.mseventmanager.web.dto.EventCreateDto;
 import com.johann.mseventmanager.web.dto.clients.TicketResponseDto;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -96,7 +95,7 @@ public class EventService {
             if (response.getStatusCode() == HttpStatus.OK) {
                 List<TicketResponseDto> tickets = (List<TicketResponseDto>) response.getBody();
                 if (!tickets.isEmpty()) {
-                    throw new EventDeleteException("Tickets are already been sold for this event");
+                    throw new EventDeleteException("Tickets have already been sold for this event");
                 }
             }
 

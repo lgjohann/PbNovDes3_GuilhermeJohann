@@ -137,6 +137,9 @@ public class EventController {
                     @ApiResponse(responseCode = "404", description = "O evento com id informado não foi localizado",
                             content = @Content(mediaType = " application/json;charset=UTF-8",
                                     schema = @Schema(implementation = ErrorMessage.class))),
+                    @ApiResponse(responseCode = "409", description = "Esse evento já possui ingressos vendidos, não é possível deletar",
+                            content = @Content(mediaType = " application/json;charset=UTF-8",
+                                    schema = @Schema(implementation = ErrorMessage.class))),
             }
     )
     @DeleteMapping(value = "/delete-event/{id}")
