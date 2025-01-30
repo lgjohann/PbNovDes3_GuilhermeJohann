@@ -13,14 +13,7 @@ spring:
     password: ${RABBITMQ-PASSWORD:guest}
 
 server:
-  port: 0
-
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka
-  instance:
-    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+  port: 8081
 
 springdoc:
   swagger-ui:
