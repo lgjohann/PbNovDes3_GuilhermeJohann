@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: ms-ticket-manager
+  data:
+    mongodb:
+      uri: mongodb://${MONGODB_USERNAME:admin}:${MONGODB_PASSWORD:admin}@${MONGODB_HOST:localhost}:${MONGODB_PORT:27017}/db_ticket?authSource=admin
+      database: ${DB_NAME:db_ticket}
+      authentication-database: ${AUTH_DB:admin}
+  rabbitmq:
+    host: ${RABBITMQ_HOST:rabbitmq}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:guest}
+    password: ${RABBITMQ_PASSWORD:guest}
+
+server:
+  port: ${SERVER_PORT:8081}
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /api/v1/tickets/api-docs
+  packagesToScan: com.johann.msticketmanager.web.controller
+
+mq:
+  queue:
+    send-email: send-email
+
+feign-names:
+  ms-event-manager: ${FEIGN_MS_EVENT:ms-event-manager}
