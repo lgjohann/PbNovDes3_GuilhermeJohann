@@ -497,3 +497,20 @@ _Cancela todos os ingressos de um cliente_
 ## 🌐 Endereço Base
 `http://18.219.97.187:8080`
 
+---
+
+# Imagens do projeto
+
+## Swagger do ms-event-manager
+![swagger-event-aws](https://github.com/user-attachments/assets/3d1971ce-60e1-4a4d-8f9e-38c48ba91a04)
+
+## Coverage de testes do ms-event-manager
+![coverage-testes-events](https://github.com/user-attachments/assets/40d93f39-9a8e-4c3e-92df-090e80dfacd5)
+
+## Swagger do ms-ticket-manager
+![swagger-ticket-aws](https://github.com/user-attachments/assets/69ef3edd-8881-4e59-9a12-3d9941ba6bfa)
+
+## Coverage de testes do ms-ticket-manager
+![coverage-testes-tickets](https://github.com/user-attachments/assets/86410b2d-22bc-41fe-b1de-ac7e760960fe)
+
+---
