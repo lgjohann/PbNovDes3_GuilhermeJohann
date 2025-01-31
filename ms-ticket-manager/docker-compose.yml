@@ -17,6 +17,7 @@ services:
       RABBITMQ_PORT: 5672
       RABBITMQ_USERNAME: guest
       RABBITMQ_PASSWORD: guest
+      SERVER_PORT: 8080
     depends_on:
       mongodb:
         condition: service_healthy
@@ -40,17 +41,15 @@ services:
       start_period: 30s
 
   mongodb:
-    container_name: "db_ticket"
-    image: "mongodb/mongodb-community-server:7.0.0-ubi8"
+    container_name: db_ticket
+    image: mongodb/mongodb-community-server:7.0.0-ubi8
     environment:
       MONGODB_INITDB_ROOT_USERNAME: admin
       MONGODB_INITDB_ROOT_PASSWORD: admin
     ports:
       - "27017:27017"
     volumes:
-      - type: bind
-        source: ./data
-        target: /data/db
+      - mongodb_data:/data/db
     networks:
       - app-network
     healthcheck:
@@ -59,3 +58,6 @@ services:
       timeout: 15s
       retries: 20
       start_period: 30s
+  
+volumes:
+  mongodb_data:

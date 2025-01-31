@@ -13,23 +13,22 @@ services:
       SPRING_DATA_MONGODB_URI: mongodb://admin:admin@mongodb:27017
       SPRING_DATA_MONGODB_DATABASE: db_event
       SPRING_DATA_MONGODB_AUTHENTICATION_DATABASE: admin
+      SERVER_PORT: 8080
     depends_on:
       mongodb:
         condition: service_healthy
     networks:
       - app-network
   mongodb:
-    container_name: "db_event"
-    image: "mongodb/mongodb-community-server:7.0.0-ubi8"
+    container_name: db_event
+    image: mongodb/mongodb-community-server:7.0.0-ubi8
     environment:
       MONGODB_INITDB_ROOT_USERNAME: admin
       MONGODB_INITDB_ROOT_PASSWORD: admin
     ports:
       - "27017:27017"
     volumes:
-      - type: bind
-        source: ./data
-        target: /data/db
+      - mongodb_data:/data/db
     networks:
       - app-network
     healthcheck:
@@ -37,4 +36,7 @@ services:
       interval: 10s
       timeout: 15s
       retries: 20
-      start_period: 30s
+      start_period: 40s
+
+volumes:
+  mongodb_data:
