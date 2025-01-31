@@ -1,4 +1,82 @@
-# PbNovDes3_GuilhermeJohann
+# Desafio 03 - Guilherme Johann
+
+## Sobre o projeto
+O projeto consiste em um sistema com arquitetura de microsserviços para gerenciamento de Eventos e Ingressos. Foram utilizados no projeto
+tecnologias como o RabbitMQ e OpenFeign para comunicação entre os serviços, e Docker para facilidade de build e escalabilidade do sistema.
+
+O projeto encontra-se hospedado na AWS, conforme endereços de acesso que estão ao fim da seção de seu respectivo microsserviço aqui no README.
+
+## 🛠 Tecnologias Utilizadas
+
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://www.java.com" target="_blank">
+        <img src="https://img.shields.io/badge/Java-007396?style=for-the-badge&logo=java&logoColor=white" alt="Java">
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://spring.io/projects/spring-boot" target="_blank">
+        <img src="https://img.shields.io/badge/Spring_Boot-6DB33F?style=for-the-badge&logo=spring&logoColor=white" alt="Spring Boot">
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://www.mongodb.com" target="_blank">
+        <img src="https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white" alt="MongoDB">
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <a href="https://www.rabbitmq.com" target="_blank">
+        <img src="https://img.shields.io/badge/RabbitMQ-FF6600?style=for-the-badge&logo=rabbitmq&logoColor=white" alt="RabbitMQ">
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/OpenFeign/feign" target="_blank">
+        <img src="https://img.shields.io/badge/OpenFeign-6DB33F?style=for-the-badge&logo=spring&logoColor=white" alt="OpenFeign">
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://www.docker.com" target="_blank">
+        <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker">
+      </a>
+    </td>
+  </tr>
+</table>
+
+## Configuração do Projeto
+
+### Pré-requisitos
+
+- Java 17
+- Docker
+
+### Passos para Executar
+
+####  Clone o repositório:
+```bash
+git clone https://github.com/lgjohann/PbNovDes3_GuilhermeJohann.git
+```
+
+#### Baixando e executando os containers:
+Na pasta raiz do repositório clonado, execute o seguinte script no terminal:
+```bash
+docker compose up --build --detach
+```
+
+**Por padrão**:
+
+- Microsserviço de eventos está na porta 8080
+- Microsserviço de ingressos está na porta 8081
+
+## Documentação Swagger
+Caso preferir, a documentação do Swagger dos endpoints de cada microserviço também estão disponíveis nos endereços abaixo:
+### ms-event-manager
+- http://3.145.162.214:8080/swagger-ui/index.html
+
+### ms-ticket-manager
+- http://18.219.97.187:8080/swagger-ui/index.html
 
 # Microsserviço de Gerenciamento de Eventos
 
@@ -70,7 +148,7 @@ GET /api/v1/events/get-event/{id}
 _Recupera detalhes de um evento específico_
 
 **Parâmetro:**
-- `id` (UUID do evento)
+- `id` (ID do evento)
 
 **Respostas:**
 | Código | Descrição               |
@@ -87,7 +165,7 @@ PUT /api/v1/events/update-event/{id}
 _Atualiza informações de um evento existente_
 
 **Parâmetro:**
-- `id` (UUID do evento)
+- `id` (ID do evento)
 
 **Corpo da Requisição:**
 ```json
@@ -114,7 +192,7 @@ DELETE /api/v1/events/delete-event/{id}
 _Remove permanentemente um evento_
 
 **Parâmetro:**
-- `id` (UUID do evento)
+- `id` (ID do evento)
 
 **Respostas:**
 | Código | Descrição                          |
@@ -188,3 +266,234 @@ _Remove permanentemente um evento_
 > - Existência do evento
 > - Formatação correta do CEP
 > - Restrições de exclusão para eventos com ingressos vendidos
+
+
+---
+
+# Microsserviço de Gerenciamento de Ingressos
+
+
+Microsserviço RESTful para gestão de ingressos com integração de eventos.
+
+---
+
+## 📚 Documentação dos Endpoints
+
+### 🎟️ **Ingressos**
+
+#### **Criar Ingresso**
+
+```http
+POST /api/v1/tickets/create-ticket
+```
+_Cria um novo ingresso vinculado a um evento_
+
+**Corpo da Requisição:**
+```json
+{
+  "customerName": "João Silva",
+  "cpf": "12345678909",
+  "customerMail": "joao@email.com",
+  "eventId": "550e8400e29b41d4a7160",
+  "eventName": "Show Internacional",
+  "brlAmount": 250.00,
+  "usdAmount": 50.00
+}
+```
+
+**Respostas:**
+| Código | Descrição                         |
+|--------|-----------------------------------|
+| 201    | Ingresso criado com sucesso       |
+| 404    | Evento não encontrado             |
+| 422    | Dados inválidos ou formato errado |
+
+---
+
+#### **Atualizar Ingresso**
+```http
+PUT /api/v1/tickets/update-ticket/{id}
+```
+_Atualiza informações de um ingresso existente_
+
+**Parâmetro:**
+- `id` (Número inteiro)
+
+**Corpo da Requisição:**
+```json
+{
+  "customerName": "Novo Nome",
+  "customerMail": "novo@email.com",
+  "eventId": "novo-event-id"
+}
+```
+
+**Respostas:**
+| Código | Descrição                         |
+|--------|-----------------------------------|
+| 200    | Ingresso atualizado com sucesso   |
+| 404    | Ingresso/Evento não encontrado    |
+| 422    | Dados inválidos                   |
+
+---
+
+#### **Buscar Ingresso por ID**
+```http
+GET /api/v1/tickets/get-ticket/{id}
+```
+_Recupera detalhes de um ingresso específico_
+
+**Parâmetro:**
+- `id` (Número inteiro)
+
+**Respostas:**
+| Código | Descrição               |
+|--------|-------------------------|
+| 200    | Detalhes do ingresso    |
+| 404    | Ingresso não encontrado |
+
+---
+
+#### **Buscar Ingressos por CPF**
+```http
+GET /api/v1/tickets/get-ticket-by-cpf/{cpf}
+```
+_Lista todos os ingressos de um cliente_
+
+**Parâmetro:**
+- `cpf` (String - 11 dígitos)
+
+**Respostas:**
+| Código | Descrição                     |
+|--------|-------------------------------|
+| 200    | Lista de ingressos            |
+| 404    | Nenhum ingresso encontrado    |
+
+---
+
+#### **Verificar Ingressos por Evento**
+```http
+GET /api/v1/tickets/check-tickets-by-event/{eventId}
+```
+_Lista ingressos vinculados a um evento_
+
+**Parâmetro:**
+- `eventId` (ID do evento)
+
+**Respostas:**
+| Código | Descrição                     |
+|--------|-------------------------------|
+| 200    | Lista de ingressos            |
+| 404    | Nenhum ingresso encontrado    |
+
+---
+
+#### **Cancelar Ingresso por ID**
+```http
+DELETE /api/v1/tickets/cancel-ticket/{id}
+```
+_Cancela um ingresso específico_
+
+**Parâmetro:**
+- `id` (Número inteiro)
+
+**Respostas:**
+| Código | Descrição                          |
+|--------|------------------------------------|
+| 204    | Cancelamento bem-sucedido          |
+| 404    | Ingresso não encontrado            |
+| 409    | Ingresso já cancelado              |
+
+---
+
+#### **Cancelar Ingressos por CPF**
+```http
+DELETE /api/v1/tickets/cancel-ticket-by-cpf/{cpf}
+```
+_Cancela todos os ingressos de um cliente_
+
+**Parâmetro:**
+- `cpf` (String - 11 dígitos)
+
+**Respostas:**
+| Código | Descrição                          |
+|--------|------------------------------------|
+| 204    | Cancelamento em massa bem-sucedido |
+| 404    | Nenhum ingresso encontrado         |
+| 409    | Todos ingressos já cancelados      |
+
+---
+
+## 📦 Estruturas de Dados
+
+### **Entrada (TicketCreateDto)**
+```json
+{
+  "customerName": "string (obrigatório)",
+  "cpf": "string",
+  "customerMail": "string (obrigatório)",
+  "eventId": "string (obrigatório)",
+  "eventName": "string (obrigatório)",
+  "brlAmount": "number (≥ 0)",
+  "usdAmount": "number (≥ 0)"
+}
+```
+
+### **Resposta (TicketResponseDto)**
+```json
+{
+  "ticketId": "integer",
+  "cpf": "string",
+  "customerName": "string",
+  "customerMail": "string",
+  "event": {
+    "eventId": "string",
+    "eventName": "string",
+    "eventDateTime": "string",
+    "logradouro": "string",
+    "bairro": "string",
+    "cidade": "string",
+    "uf": "string"
+  },
+  "brlTotalAmount": "number",
+  "usdTotalAmount": "number",
+  "status": "string"
+}
+```
+
+### **Erro (ErrorMessage)**
+```json
+{
+  "path": "string",
+  "method": "string",
+  "status": "number",
+  "statusText": "string",
+  "message": "string",
+  "errors": {
+    "campo": "descrição do erro"
+  }
+}
+```
+
+---
+
+## ⚠️ Requisitos e Validações
+
+1. **Campos Obrigatórios:**
+   - `customerName`
+   - `customerMail`
+   - `eventId`
+   - `eventName`
+
+2. **Restrições Numéricas:**
+   - `brlAmount` e `usdAmount` devem ser ≥ 0
+
+3. **Formato Especial:**
+   - `YYYY-MM-DDTHH:mm:ss` (Ex: `2024-12-31T23:59:59`)
+   - `cpf`: 11 dígitos (sem formatação)
+
+---
+
+## 🌐 Endereço Base
+`http://18.219.97.187:8080`
+
